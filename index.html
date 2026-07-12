@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web-Based Lexical Analyzer</title>
+    <meta name="description" content="A modern browser-based lexical analyzer built with HTML, CSS, and JavaScript." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <div class="brand-section">
+          <div class="app-title-container">
+            <span class="logo-icon">🔎</span>
+            <h1 class="app-title">Web-Based Lexical Analyzer</h1>
+          </div>
+          <p class="app-subtitle">Inspect source code, classify tokens, and review lexical output in real time.</p>
+        </div>
+        <div class="team-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polygon points="2 17 12 22 22 17"></polygon>
+            <polygon points="2 12 12 17 22 12"></polygon>
+          </svg>
+          <span>Assignment Project • Frontend Lexical Analyzer</span>
+        </div>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card glass-panel">
+          <div class="stat-icon-wrapper stat-tokens">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="total-tokens">0</span>
+            <span class="stat-label">Total Tokens</span>
+          </div>
+        </div>
+
+        <div class="stat-card glass-panel">
+          <div class="stat-icon-wrapper stat-unique">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="unique-lexemes">0</span>
+            <span class="stat-label">Unique Lexemes</span>
+          </div>
+        </div>
+
+        <div class="stat-card glass-panel">
+          <div class="stat-icon-wrapper stat-lines">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="line-count">0</span>
+            <span class="stat-label">Lines Tracked</span>
+          </div>
+        </div>
+
+        <div class="stat-card glass-panel">
+          <div class="stat-icon-wrapper stat-errors">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="error-count">0</span>
+            <span class="stat-label">Lexical Errors</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-grid">
+        <section class="glass-panel input-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <polyline points="8 13 6 15 8 17"></polyline>
+                <polyline points="16 13 18 15 16 17"></polyline>
+                <line x1="12" y1="13" x2="10" y2="17"></line>
+              </svg>
+              <span>Source Code Input</span>
+            </h2>
+            <div class="controls-row">
+              <select id="mode-select" class="select-dropdown">
+                <option value="strict">Strict Assignment Mode</option>
+                <option value="cpp">C / C++</option>
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="upload-row">
+            <div id="file-status" class="active-file-indicator" style="display: none;"></div>
+            <div class="file-input-wrapper">
+              <label class="file-upload-btn" for="file-field">
+                <svg class="upload-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <p class="upload-text">Upload a code file or <strong>browse</strong></p>
+                <span class="file-specs">Supports .txt, .py, .cpp, .js, .java</span>
+              </label>
+              <input type="file" id="file-field" accept=".txt,.py,.cpp,.js,.java,.c,.h" style="display: none;" />
+            </div>
+          </div>
+
+          <div class="editor-shell">
+            <div class="editor-header">
+              <span id="editor-label">Strict Assignment Mode Editor</span>
+              <span>UTF-8</span>
+            </div>
+            <div class="editor-stack">
+              <pre id="highlight-layer" class="code-highlight" aria-hidden="true"></pre>
+              <textarea id="code-input" class="code-input" placeholder="Paste or write your source code here..." spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <div class="editor-actions">
+            <button id="run-btn" type="button" class="convert-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Run Lexical Analysis</span>
+            </button>
+            <p class="helper-text">Comments, strings, numbers, and operators are highlighted as you type.</p>
+          </div>
+
+          <div id="error-box" class="active-file-indicator" style="display: none; background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.2); color: var(--color-error);"></div>
+        </section>
+
+        <section class="glass-panel results-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polygon points="2 17 12 22 22 17"></polygon>
+                <polygon points="2 12 12 17 22 12"></polygon>
+              </svg>
+              <span>Tokenization Results</span>
+            </h2>
+            <div class="results-actions">
+              <svg class="search-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="table-search" class="search-input" placeholder="Search lexeme or type..." />
+            </div>
+          </div>
+
+          <div id="results-summary" class="results-summary"></div>
+
+          <div class="table-scroll-container">
+            <table class="results-table" id="tokens-table">
+              <thead>
+                <tr>
+                  <th>Lexeme</th>
+                  <th>Token Type</th>
+                  <th>Line No</th>
+                  <th>Col No</th>
+                </tr>
+              </thead>
+              <tbody id="tokens-table-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
